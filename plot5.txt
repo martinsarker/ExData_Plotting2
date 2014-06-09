@@ -1,0 +1,27 @@
+##	Reading the data
+NEI <- readRDS("summarySCC_PM25.rds")
+SCC <- readRDS("Source_Classification_Code.rds")
+
+##	Subset only Baltimore data
+NEI <- NEI[NEI$fips == 24510,]
+
+##	Creating vector with SCC numbers of motor-related sources
+SCC_motor_related <- SCC$SCC[grep("[Mm]obile", SCC$EI.Sector)]
+##	Subsets only motor-related data
+NEI_motor_related <- NEI[NEI$SCC %in% SCC_motor_related ,]
+
+##	Setting vectors which will be plotted
+years <- c(1999,2002,2005,2008)
+Motor_emissions_means <- c(mean(NEI_motor_related$Emission[NEI_motor_related$year == 1999]),
+			   mean(NEI_motor_related$Emission[NEI_motor_related$year == 2002]),
+			   mean(NEI_motor_related$Emission[NEI_motor_related$year == 2005]), 
+			   mean(NEI_motor_related$Emission[NEI_motor_related$year == 2008]))
+
+##	Plotting
+plot(years, Motor_emissions_means, type = "l", main = "Motor-related emissions in Baltimore between years 1999 and 2008",
+	ylab = "Mean of emission [tons]", xlab = "Year" )
+
+
+##	Saving into the file
+dev.copy(png, file = "plot5.png", width = 520, height = 480)
+dev.off()

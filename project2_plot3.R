@@ -1,0 +1,17 @@
+setwd("C:/Users/Sharky/coursera/Data science/Exploratory data analysis/Project2")
+library(ggplot2)
+
+##	Reading the data
+NEI <- readRDS("summarySCC_PM25.rds")
+SCC <- readRDS("Source_Classification_Code.rds")
+
+NEI_Baltimore <- NEI[NEI$fips == 24510,]
+NEI_Baltimore <- transform(NEI_Baltimore, type=factor(type))
+
+##	Plot it with regression lines
+qplot(year, Emissions, main = "Pollution in Baltimore between years 1999 and 2008",
+ 	data = NEI_Baltimore, facets = . ~ type) + geom_smooth(method=lm)
+
+##	Saving into the file
+dev.copy(png, file = "plot3.png", width = 800, height = 480)
+dev.off()
